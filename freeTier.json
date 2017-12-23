@@ -1,11 +1,22 @@
 https://console.aws.amazon.com/cloudformation/home?#/stacks/new?&templateURL=https://s3.amazonaws.com/maniksoft/freeTier.json
 
 {
-	"AWSTemplateFormatVersion": "2017-12-23",
+	"AWSTemplateFormatVersion": "2010-09-09",
 	"Description": "AWS CloudFormation Sample Template VPC_Single_Instance_In_Subnet: Sample template showing how to create a VPC and add an EC2 instance with an Elastic IP address and a security group. Allows one to rapidly build AWS free tier infrastructure where ever possible- VPC, IGW, Subnet, RouteTable, Route, SubnetRouteTableAssociation, NetworkAcl, InboundHTTPNetworkAclEntry, InboundSSHNetworkAclEntry, InboundResponsePortsNetworkAclEntry, OutBoundHTTPNetworkAclEntry, OutBoundHTTPSNetworkAclEntry, OutBoundResponsePortsNetworkAclEntry, SubnetNetworkAclAssociation, InstanceSecurityGroup, EC2WebServerInstance. **WARNING** There is a possibility that you will be billed for the AWS resources used if you create a stack from this template, so check with AWS before assuming this is completely free tier.",
 	"Parameters": {
+		"Region": {
+			"Description": "Select Region",
+			"Type": "String",
+			"Default": "us-east-1a",
+			"AllowedValues": ["us-east-1a",
+			"us-east-1b",
+			"us-east-1c",
+			"us-east-1d",
+			"us-east-1f"],
+			"ConstraintDescription": "must be a valid region."
+		},
 		"InstanceType": {
-			"Description": "EC2 instance type",
+			"Description": "Select EC2 instance type",
 			"Type": "String",
 			"Default": "t2.small",
 			"AllowedValues": ["t1.micro",
@@ -65,7 +76,7 @@ https://console.aws.amazon.com/cloudformation/home?#/stacks/new?&templateURL=htt
 			"ConstraintDescription": "must be a valid EC2 instance type."
 		},
 		"SSHLocation": {
-			"Description": " The IP address range that can be used to SSH to the EC2 instances",
+			"Description": " Enter the IP address range that can be used to SSH to the EC2 instances",
 			"Type": "String",
 			"MinLength": "9",
 			"MaxLength": "18",
@@ -802,6 +813,19 @@ https://console.aws.amazon.com/cloudformation/home?#/stacks/new?&templateURL=htt
 					}
 				}]
 			}
+		}
+	},
+	"Outputs": {
+		"URL": {
+			"Value": {
+				"Fn::Join": ["",
+				["http://",
+				{
+					"Fn::GetAtt": ["WebServerInstance",
+					"PublicIp"]
+				}]]
+			},
+			"Description": "Newly created application URL"
 		}
 	}
 }
